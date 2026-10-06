@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Recovery.Cli/Recovery.Cli.csproj" />
+    <Project Path="src/Recovery.Core/Recovery.Core.csproj" />
+    <Project Path="src/Recovery.Gui/Recovery.Gui.csproj" />
+  </Folder>
+</Solution>
