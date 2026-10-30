@@ -1,7 +1,22 @@
 # Recovery
 
-Photo & video recovery tool for Windows, in the spirit of EaseUS Data Recovery Wizard,
-plus a disk-space analyzer.
+Photo & video recovery tool for Windows, plus a disk-space analyzer. It restores
+media from the Recycle Bin, undeletes files by their original name from the NTFS MFT,
+carves photos and videos out of free space, repairs damaged JPEG/PNG/MP4 files, and
+shows what is taking up space on a drive.
+
+## Download
+
+Get `RecoveryGui.exe` from the [latest release](https://github.com/AlexIvlev91/Recovery/releases/latest)
+and double-click it. There's nothing to install and .NET doesn't need to be on the PC.
+It runs on 64-bit Windows 10 and 11. `recover.exe` is the same tools from the command line.
+
+If you can, save the download to a different drive than the one you want to recover
+from: every file written to that drive can overwrite deleted data.
+
+The exes aren't code-signed yet, so the first time Windows may say *"Windows protected
+your PC"*. Click **More info → Run anyway**. The release build is made by GitHub
+Actions from the tagged source ([release.yml](.github/workflows/release.yml)).
 
 ## The app (`RecoveryGui.exe`)
 
@@ -250,8 +265,45 @@ totals update in place without rescanning.
 
 ## Build
 
-.NET 8. `dotnet build` at the repo root; the CLI publishes to a single exe with
-`dotnet publish src/Recovery.Cli -c Release -r win-x64 --self-contained`.
+Requires the .NET 8 SDK (or newer) on Windows.
+
+```bash
+dotnet build src/Recovery.Gui -c Release
+```
+
+The MFT parser and the video rebuild have self-tests that build synthetic data in
+memory:
+
+```bash
+dotnet run --project src/Recovery.Cli -- selftest-mft
+```
+
+```bash
+dotnet run --project src/Recovery.Cli -- selftest-mp4
+```
+
+To make the apps, publish portable exes with .NET bundled inside:
+
+```bash
+dotnet publish src/Recovery.Gui -p:PublishProfile=SingleExe
+```
+
+```bash
+dotnet publish src/Recovery.Cli -p:PublishProfile=SingleExe
+```
+
+This produces `publish\RecoveryGui.exe` and `publish\recover.exe`.
+
+To publish a release, push a version tag. GitHub Actions builds both exes and attaches
+them, with the licenses, to a new GitHub release:
+
+```bash
+git tag v1.0.1
+```
+
+```bash
+git push origin v1.0.1
+```
 
 ## Layout
 
@@ -266,3 +318,16 @@ totals update in place without rescanning.
   shell), `Pages/` (one page per tool), `Controls/` (buttons, chips,
   virtual-mode table, thumbnail gallery + background loader, treemap, usage bar,
   preview pane), `Theme` (colors, fonts, icon glyphs, DPI scaling).
+
+## Contributing
+
+Issues and pull requests are welcome. Please keep changes in the style of the
+surrounding code and run both self-tests before sending a pull request. Don't test
+recovery on a drive whose data you can't afford to lose.
+
+## License
+
+Recovery is released under the [MIT License](LICENSE) and comes with no warranty.
+Recovery can't bring back data that has already been overwritten, so always restore
+to another drive. The released exes bundle the .NET runtime under its own license;
+see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

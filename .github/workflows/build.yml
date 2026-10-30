@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.x
+      - run: dotnet build src/Recovery.Gui -c Release
+      - run: dotnet build src/Recovery.Cli -c Release
+      - name: MFT self-test
+        run: dotnet run --project src/Recovery.Cli -c Release --no-build -- selftest-mft
+      - name: MP4 rebuild self-test
+        run: dotnet run --project src/Recovery.Cli -c Release --no-build -- selftest-mp4
