@@ -5,6 +5,8 @@ media from the Recycle Bin, undeletes files by their original name from the NTFS
 carves photos and videos out of free space, repairs damaged JPEG/PNG/MP4 files, and
 shows what is taking up space on a drive.
 
+![The Deep scan page of Recovery](docs/deep-scan.png)
+
 ## Download
 
 Get `RecoveryGui.exe` from the [latest release](https://github.com/AlexIvlev91/Recovery/releases/latest)
